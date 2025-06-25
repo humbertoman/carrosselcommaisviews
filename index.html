@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel de Imagens para Notion</title>
+    <style>
+        /* Estilos Globais e do Corpo */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh; /* Usa 100vh para preencher a altura da janela de visualização */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent; /* Fundo transparente para integrar-se perfeitamente ao Notion */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Container Principal do Carrossel */
+        #carousel-container {
+            width: 100%;
+            height: 100%;
+            max-width: 800px; /* Define uma largura máxima para telas grandes */
+            max-height: 600px; /* Define uma altura máxima */
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px; /* Cantos arredondados estilo iOS */
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12); /* Sombra sutil para profundidade */
+            display: flex;
+            flex-direction: column;
+            background: #f0f0f0; /* Cor de fundo caso as imagens demorem a carregar */
+        }
+
+        /* Área dos Slides */
+        #carousel-slides {
+            flex-grow: 1; /* Faz esta área ocupar todo o espaço vertical disponível */
+            position: relative;
+            width: 100%;
+            height: 100%; /* Ocupa a altura da área flexível */
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1); /* Transição de fade suave e elegante */
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer, cortando se necessário */
+            display: block;
+        }
+
+        /* Legenda da Imagem */
+        #carousel-caption {
+            background-color: rgba(242, 242, 247, 0.75); /* Cor de fundo semitransparente (light mode) */
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: #1d1d1f;
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 3;
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        /* Botões de Navegação */
+        .nav-btn {
+            position: absolute;
+            top: 50%; /* Centraliza verticalmente na área dos slides */
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.25);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-50%) scale(0.8);
+        }
+
+        #carousel-container:hover .nav-btn {
+            opacity: 1; /* Aparecem ao passar o mouse sobre o carrossel */
+            transform: translateY(-50%) scale(1);
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        #prev-btn {
+            left: 15px;
+            padding-right: 2px; /* Ajuste visual da seta */
+        }
+
+        #next-btn {
+            right: 15px;
+            padding-left: 2px; /* Ajuste visual da seta */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="carousel-container">
+        <div id="loading-state">Carregando imagens...</div>
+        <div id="carousel-slides">
+            <!-- As imagens serão inseridas aqui pelo JavaScript -->
+        </div>
+        <div id="carousel-caption"></div>
+        <button id="prev-btn" class="nav-btn" aria-label="Slide Anterior">&#10094;</button>
+        <button id="next-btn" class="nav-btn" aria-label="Próximo Slide">&#10095;</button>
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÃO ---
+        // Para usar com o Google Sheets, cole a URL da sua API do Google Apps Script aqui.
+        // Se esta URL estiver vazia ou for inválida, o carrossel usará os dados de exemplo abaixo.
+        const GOOGLE_SHEET_API_URL = '';
+
+        // Dados de exemplo (usados se a API falhar ou não for fornecida)
+        const fallbackData = [
+            {
+                ImageUrl: 'https://images.unsplash.com/photo-1598361058148-52f135e6dcce?crop=entropy&cs=srgb&fm=jpg&ixid=M3wyNjI5NjF8MHwxfHNlYXJjaHwxfHxpcGhvbmUlMjB3YWxscGFwZXJ8ZW58MHx8fHwxNzE5MjM4NjM1fDA&ixlib=rb-4.0.3&q=85&w=1920',
+                Caption: 'Uma paisagem montanhosa em tons vibrantes ao entardecer.'
+            },
+            {
+                ImageUrl: 'https://images.unsplash.com/photo-1598361065215-4a2cb29559c4?crop=entropy&cs=srgb&fm=jpg&ixid=M3wyNjI5NjF8MHwxfHNlYXJjaHwzfHxpcGhvbmUlMjB3YWxscGFwZXJ8ZW58MHx8fHwxNzE5MjM8NjM1fDA&ixlib=rb-4.0.3&q=85&w=1920',
+                Caption: 'Formas abstratas e fluidas em tons de azul, rosa e roxo.'
+            },
+            {
+                ImageUrl: 'https://images.unsplash.com/photo-1554224311-39a092c6126c?crop=entropy&cs=srgb&fm=jpg&ixid=M3wyNjI5NjF8MHwxfHNlYXJjaHw1fHxpcGhvbmUlMjB3YWxscGFwZXJ8ZW58MHx8fHwxNzE5MjM4NjM1fDA&ixlib=rb-4.0.3&q=85&w=1920',
+                Caption: 'Ondulações suaves nas dunas de um deserto de areia.'
+            },
+            {
+                ImageUrl: 'https://images.unsplash.com/photo-1598361065275-d144f86d8d8f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wyNjI5NjF8MHwxfHNlYXJjaHwyfHxpcGhvbmUlMjB3YWxscGFwZXJ8ZW58MHx8fHwxNzE5MjM4NjM1fDA&ixlib=rb-4.0.3&q=85&w=1920',
+                Caption: 'Vista aérea de uma praia com ondas quebrando na areia.'
+            }
+        ];
+
+        // --- LÓGICA DO CARROSSEL (Não precisa editar abaixo desta linha) ---
+        
+        const slidesContainer = document.getElementById('carousel-slides');
+        const captionContainer = document.getElementById('carousel-caption');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const loadingState = document.getElementById('loading-state');
+
+        let slidesData = [];
+        let currentIndex = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // Função principal para buscar os dados e construir o carrossel
+        async function initializeCarousel() {
+            try {
+                // Tenta buscar da API do Google Sheets se a URL for fornecida
+                if (GOOGLE_SHEET_API_URL) {
+                    const response = await fetch(GOOGLE_SHEET_API_URL);
+                    if (!response.ok) throw new Error('A resposta da rede não foi OK');
+                    slidesData = await response.json();
+                } else {
+                    throw new Error('URL da API não fornecida');
+                }
+            } catch (error) {
+                console.warn(`Aviso: ${error.message}. Usando dados de exemplo.`);
+                slidesData = fallbackData; // Em caso de erro, usa os dados de exemplo
+            } finally {
+                if (slidesData && slidesData.length > 0) {
+                    hideLoadingState();
+                    buildCarousel();
+                } else {
+                    showErrorState('Nenhuma imagem encontrada.');
+                }
+            }
+        }
+
+        function hideLoadingState() {
+            if (loadingState) {
+                loadingState.style.display = 'none';
+            }
+        }
+
+        function showErrorState(message) {
+             if (loadingState) {
+                loadingState.textContent = message;
+                loadingState.style.display = 'block';
+            }
+            captionContainer.textContent = message;
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+
+        // Constrói os elementos 'slide' no HTML
+        function buildCarousel() {
+            slidesContainer.innerHTML = ''; // Limpa o container
+            slidesData.forEach((slideInfo, index) => {
+                const slideElement = document.createElement('div');
+                slideElement.classList.add('slide');
+                
+                const img = document.createElement('img');
+                img.src = slideInfo.ImageUrl;
+                img.alt = slideInfo.Caption || `Imagem do carrossel ${index + 1}`; // Fornece um alt text
+                img.onerror = () => {
+                    // Se uma imagem falhar, mostra um erro no slide específico
+                    slideElement.innerHTML = `<div class="error-slide">Falha ao carregar imagem</div>`;
+                };
+                
+                slideElement.appendChild(img);
+                slidesContainer.appendChild(slideElement);
+            });
+            showSlide(0); // Mostra o primeiro slide
+        }
+
+        // Mostra um slide específico e atualiza a legenda
+        function showSlide(index) {
+            const allSlides = document.querySelectorAll('.slide');
+            
+            // Garante que o índice esteja dentro dos limites
+            currentIndex = (index + allSlides.length) % allSlides.length;
+
+            allSlides.forEach(slide => slide.classList.remove('active'));
+            allSlides[currentIndex].classList.add('active');
+            
+            captionContainer.style.opacity = 0;
+            setTimeout(() => {
+                captionContainer.textContent = slidesData[currentIndex].Caption;
+                captionContainer.style.opacity = 1;
+            }, 200);
+        }
+
+        // Funções para navegar
+        const nextSlide = () => showSlide(currentIndex + 1);
+        const prevSlide = () => showSlide(currentIndex - 1);
+        
+        // Suporte para Swipe em telas de toque
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }
+
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide(); // Swipe para a esquerda
+            if (touchEndX > touchStartX + 50) prevSlide(); // Swipe para a direita
+        }
+
+        // Adiciona os ouvintes de eventos
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+        
+        slidesContainer.addEventListener('touchstart', handleTouchStart, false);
+        slidesContainer.addEventListener('touchend', handleTouchEnd, false);
+
+        // Inicia tudo
+        document.addEventListener('DOMContentLoaded', initializeCarousel);
+
+    </script>
+</body>
+</html>
