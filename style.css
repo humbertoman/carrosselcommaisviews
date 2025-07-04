@@ -1,115 +1,103 @@
-/*
- * CSS Final para Carrossel Responsivo no Notion
- * Versão: 3.0
- * Alterações:
- * - Layout fluido para se adaptar ao bloco de embed.
- * - Uso de 'aspect-ratio' para manter a proporção.
- * - Correção de margens laterais para visualização rente no Notion.
-*/
-
-/** 1. Estilos Globais e Reset **/
-/* Ajustes para remover margens e preenchimentos indesejados no Notion */
+/* Estilos Gerais */
 body, html {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100%;
-    height: 100%;
-    font-family: Arial, sans-serif;
-    background-color: transparent; /* Fundo transparente para se mesclar melhor */
-    overflow: hidden; /* Evita barras de rolagem indesejadas */
-}
-
-/** 2. Contêiner Principal do Carrossel **/
-.carousel-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    
-    /* PONTO CHAVE: Defina a proporção desejada aqui. */
-    /* Exemplos: 16/9 (widescreen), 4/3 (padrão), 1/1 (quadrado) */
-    aspect-ratio: 16 / 9;
-
-    overflow: hidden;
-    background-color: #1c1c1c; /* Cor de fundo escura para o contêiner */
-}
-
-/** 3. Faixa de Slides e Imagens **/
-/* Contêiner que se move horizontalmente */
-.carousel-slide {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #111; /* Fundo escuro para destacar o carrossel */
     display: flex;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.5s ease-in-out; /* Animação suave */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-/* Estilo para cada imagem individual */
-.carousel-slide img {
+/* Contêiner principal que define a "janela" do carrossel */
+.carousel-container {
+    width: 90%;
+    max-width: 1000px;
+    position: relative;
+    overflow: hidden; /* Essencial: esconde os cards fora da área visível */
+}
+
+/* A "pista" onde os cards se movem. É muito mais larga que o contêiner. */
+.carousel-track {
+    display: flex;
+    gap: 20px; /* Espaço entre os cards */
+}
+
+/* Estilo de cada card individual */
+.carousel-card {
+    /* Define que 3 cards devem caber na tela, ajustando pelo gap */
+    flex: 0 0 calc(100% / 3 - 14px); 
+    background-color: white;
+    border-radius: 16px; /* Bordas arredondadas */
+    overflow: hidden; /* Garante que a imagem respeite as bordas */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.card-image {
     width: 100%;
-    height: 100%;
-    flex-shrink: 0; /* Previne que as imagens encolham */
+    display: block;
+    /* Força o formato retangular vertical (altura é 4/3 da largura) */
+    aspect-ratio: 3 / 4; 
     object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
 }
 
-/** 4. Botões de Navegação (Anterior/Próximo) **/
-.prev-btn, .next-btn {
+.card-title {
+    padding: 16px;
+    text-align: center;
+    font-weight: 600;
+    color: #222;
+    background-color: white;
+}
+
+/* Botões de Navegação */
+.carousel-button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.45);
-    color: white;
+    background-color: rgba(255, 255, 255, 0.8);
     border: none;
-    cursor: pointer;
-    padding: 1rem 0.75rem;
-    font-size: 1.25rem;
-    border-radius: 6px;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
-    z-index: 10;
-    opacity: 0.7; /* Botões ficam um pouco transparentes quando inativos */
-}
-
-.carousel-container:hover .prev-btn,
-.carousel-container:hover .next-btn {
-    opacity: 1; /* Botões ficam totalmente visíveis ao passar o mouse sobre o carrossel */
-}
-
-.prev-btn:hover, .next-btn:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-}
-
-.prev-btn {
-    left: 12px;
-}
-
-.next-btn {
-    right: 12px;
-}
-
-/** 5. Indicadores de Posição (Bolinhas) **/
-.dots-container {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    z-index: 10;
-}
-
-.dot {
-    cursor: pointer;
-    height: 12px;
-    width: 12px;
-    margin: 0 5px;
-    background-color: rgba(255, 255, 255, 0.4);
     border-radius: 50%;
-    display: inline-block;
-    transition: background-color 0.4s ease;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    z-index: 10;
 }
 
-.dot:hover {
-    background-color: rgba(255, 255, 255, 0.7);
-}
-
-.dot.active {
+.carousel-button:hover {
     background-color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-button.prev {
+    left: 15px;
+}
+
+.carousel-button.next {
+    right: 15px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .carousel-card {
+        /* Mostra 2 cards em tablets */
+        flex: 0 0 calc(100% / 2 - 10px);
+    }
+}
+
+@media (max-width: 500px) {
+    .carousel-card {
+        /* Mostra 1 card em celulares */
+        flex: 0 0 80%;
+    }
+    .carousel-track {
+        padding-left: 10%; /* Centraliza o primeiro card */
+    }
 }
