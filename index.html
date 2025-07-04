@@ -36,12 +36,17 @@
 
         .splide-container {
             width: 100%;
+            /* MUDANÇA: Define uma largura máxima para forçar o carrossel a ser pequeno */
+            max-width: 450px; 
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 12px; /* Adiciona um respiro nas laterais */
+            /* MUDANÇA: Reduz o padding para economizar espaço */
+            padding: 8px; 
             box-sizing: border-box;
+            /* MUDANÇA: Centraliza o container se o bloco do Notion for maior que a max-width */
+            margin: 0 auto;
         }
 
         /* Estilo do card (slide) */
@@ -52,7 +57,6 @@
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--card-border);
-            /* Proporção vertical, ideal para o layout de card */
             aspect-ratio: 3 / 4;
             transition: background-color 0.3s, border-color 0.3s;
         }
@@ -72,13 +76,14 @@
         
         /* Estilo do título do card */
         .slide__title {
-            padding: 12px 16px;
+            /* MUDANÇA: Reduz o padding e o tamanho da fonte para o layout compacto */
+            padding: 8px 12px;
             text-align: center;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-color);
             background-color: var(--card-bg);
-            flex-shrink: 0; /* Impede que o título encolha */
+            flex-shrink: 0; 
             transition: background-color 0.3s, color 0.3s;
             border-top: 1px solid var(--card-border);
         }
@@ -86,9 +91,14 @@
         /* Personalização das setas de navegação */
         .splide__arrow {
             background-color: rgba(0, 0, 0, 0.5);
+            /* MUDANÇA: Reduz o tamanho das setas */
+            width: 2em;
+            height: 2em;
         }
         .splide__arrow svg {
             fill: white;
+            width: 1em;
+            height: 1em;
         }
     </style>
 </head>
@@ -145,19 +155,14 @@
                 autoplay    : true,
                 interval    : 4000,
                 pauseOnHover: true,
-                gap         : '1rem',
+                /* MUDANÇA: Reduz o espaçamento para um layout mais compacto */
+                gap         : '0.75rem', /* 12px */
                 arrows      : true,
                 pagination  : false,
                 drag        : true,
-                breakpoints: {
-                    1200: {
-                        perPage: 2,
-                    },
-                    768: {
-                        perPage: 1,
-                        arrows: false,
-                    }
-                }
+                /* MUDANÇA: Breakpoints removidos. O layout agora é fixo e pequeno, 
+                   controlado pela 'max-width' no CSS, garantindo que ele
+                   sempre se mantenha reduzido. */
             }).mount();
         });
     </script>
