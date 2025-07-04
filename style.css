@@ -1,52 +1,75 @@
-/* Estilo geral do corpo da página */
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f2f5;
+/*
+ * CSS Final para Carrossel Responsivo no Notion
+ * Versão: 3.0
+ * Alterações:
+ * - Layout fluido para se adaptar ao bloco de embed.
+ * - Uso de 'aspect-ratio' para manter a proporção.
+ * - Correção de margens laterais para visualização rente no Notion.
+*/
+
+/** 1. Estilos Globais e Reset **/
+/* Ajustes para remover margens e preenchimentos indesejados no Notion */
+body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
     font-family: Arial, sans-serif;
-    margin: 0;
+    background-color: transparent; /* Fundo transparente para se mesclar melhor */
+    overflow: hidden; /* Evita barras de rolagem indesejadas */
 }
 
-/* Contêiner principal do carrossel */
+/** 2. Contêiner Principal do Carrossel **/
 .carousel-container {
     position: relative;
-    width: 80%;
-    max-width: 800px; /* Largura máxima */
-    margin: auto;
-    overflow: hidden; /* Esconde as partes das imagens que estão fora */
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 100%;
+    
+    /* PONTO CHAVE: Defina a proporção desejada aqui. */
+    /* Exemplos: 16/9 (widescreen), 4/3 (padrão), 1/1 (quadrado) */
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+    background-color: #1c1c1c; /* Cor de fundo escura para o contêiner */
 }
 
-/* Faixa que contém todas as imagens */
+/** 3. Faixa de Slides e Imagens **/
+/* Contêiner que se move horizontalmente */
 .carousel-slide {
     display: flex;
     width: 100%;
-    transition: transform 0.5s ease-in-out; /* Animação de transição */
+    height: 100%;
+    transition: transform 0.5s ease-in-out; /* Animação suave */
 }
 
-/* Estilo de cada imagem */
+/* Estilo para cada imagem individual */
 .carousel-slide img {
     width: 100%;
-    flex-shrink: 0; /* Impede que as imagens encolham */
-    object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+    height: 100%;
+    flex-shrink: 0; /* Previne que as imagens encolham */
+    object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
 }
 
-/* Estilo dos botões de navegação (anterior/próximo) */
+/** 4. Botões de Navegação (Anterior/Próximo) **/
 .prev-btn, .next-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.45);
     color: white;
     border: none;
     cursor: pointer;
-    padding: 15px 10px;
-    font-size: 20px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    padding: 1rem 0.75rem;
+    font-size: 1.25rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    z-index: 10;
+    opacity: 0.7; /* Botões ficam um pouco transparentes quando inativos */
+}
+
+.carousel-container:hover .prev-btn,
+.carousel-container:hover .next-btn {
+    opacity: 1; /* Botões ficam totalmente visíveis ao passar o mouse sobre o carrossel */
 }
 
 .prev-btn:hover, .next-btn:hover {
@@ -54,35 +77,39 @@ body {
 }
 
 .prev-btn {
-    left: 10px;
+    left: 12px;
 }
 
 .next-btn {
-    right: 10px;
+    right: 12px;
 }
 
-/* Contêiner para os indicadores de ponto */
+/** 5. Indicadores de Posição (Bolinhas) **/
 .dots-container {
     position: absolute;
     bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
+    z-index: 10;
 }
 
-/* Estilo de cada ponto indicador */
 .dot {
     cursor: pointer;
     height: 12px;
     width: 12px;
     margin: 0 5px;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.4);
     border-radius: 50%;
     display: inline-block;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.4s ease;
+    border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-/* Estilo do ponto ativo */
+.dot:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
 .dot.active {
     background-color: white;
 }
