@@ -1,166 +1,81 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrossel Infinito para Notion</title>
-
-    <!-- 1. Importa o CSS da biblioteca do carrossel (Splide.js) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
-
-    <style>
-        /* Define as variáveis de cor para os temas claro e escuro */
-        :root {
-            --card-bg: #FFFFFF;
-            --text-color: #37352f; /* Cor do texto do Notion (light) */
-            --card-border: rgba(0, 0, 0, 0.1);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --card-bg: #2F2F2F;
-                --text-color: rgba(255, 255, 255, 0.9); /* Cor do texto do Notion (dark) */
-                --card-border: rgba(255, 255, 255, 0.1);
-            }
-        }
-
-        /* Estilos para garantir que o carrossel ocupe 100% do bloco no Notion */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-            background-color: transparent;
-        }
-
-        .splide-container {
-            width: 100%;
-            /* MUDANÇA: Largura máxima reduzida em mais 50% */
-            max-width: 170px; 
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 4px; 
-            box-sizing: border-box;
-            margin: 0 auto;
-        }
-
-        /* Estilo do card (slide) */
-        .splide__slide {
-            display: flex;
-            flex-direction: column;
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--card-border);
-            aspect-ratio: 3 / 4;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-
-        /* Container da imagem para controlar o preenchimento */
-        .slide__image-container {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .splide__slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        /* Estilo do título do card */
-        .slide__title {
-            /* MUDANÇA: Padding e fonte reduzidos para o layout micro */
-            padding: 6px 8px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 10px;
-            color: var(--text-color);
-            background-color: var(--card-bg);
-            flex-shrink: 0; 
-            transition: background-color 0.3s, color 0.3s;
-            border-top: 1px solid var(--card-border);
-        }
-        
-        /* As setas são ocultadas via JS, mas mantemos o estilo caso queira reativá-las */
-        .splide__arrow {
-            background-color: rgba(0, 0, 0, 0.5);
-            width: 2em;
-            height: 2em;
-        }
-        .splide__arrow svg {
-            fill: white;
-            width: 1em;
-            height: 1em;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carrossel Infinito</title>
+  <style>
+    /* Container ajusta-se ao iframe/Notion */
+    .carousel-container {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Track para slides em linha */
+    .carousel-track {
+      display: flex;
+      flex-wrap: nowrap;
+      animation: scroll linear infinite;
+      /* velocidade padrão: ajuste em --duration */
+      --duration: 20s;
+      animation-duration: var(--duration);
+    }
+    /* Cada slide ocupa 1/3 do container (3 visíveis) */
+    .carousel-slide {
+      flex: 0 0 calc(100% / 3);
+      box-sizing: border-box;
+      padding: 0.5rem;
+    }
+    .carousel-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Keyframes para animação infinita */
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    /* Pausa ao passar o mouse (opcional) */
+    .carousel-container:hover .carousel-track {
+      animation-play-state: paused;
+    }
+  </style>
 </head>
 <body>
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack"></div>
+  </div>
 
-    <div class="splide-container">
-        <section class="splide" aria-label="Galeria de imagens com títulos">
-            <div class="splide__track">
-                <ul class="splide__list">
-                    <!-- Slide 1 -->
-                    <li class="splide__slide">
-                        <div class="slide__image-container">
-                            <img src="https://placehold.co/600x800/7F9CF5/FFFFFF?text=Imagem" alt="Descrição da imagem 1">
-                        </div>
-                        <div class="slide__title">Título 1</div>
-                    </li>
-                    <!-- Slide 2 -->
-                    <li class="splide__slide">
-                        <div class="slide__image-container">
-                             <img src="https://placehold.co/600x800/A3BFFA/FFFFFF?text=Imagem" alt="Descrição da imagem 2">
-                        </div>
-                        <div class="slide__title">Título 2</div>
-                    </li>
-                    <!-- Slide 3 -->
-                    <li class="splide__slide">
-                         <div class="slide__image-container">
-                            <img src="https://placehold.co/600x800/FBBF24/FFFFFF?text=Imagem" alt="Descrição da imagem 3">
-                        </div>
-                        <div class="slide__title">Título 3</div>
-                    </li>
-                    <!-- Slide 4 -->
-                    <li class="splide__slide">
-                         <div class="slide__image-container">
-                            <img src="https://placehold.co/600x800/F87171/FFFFFF?text=Imagem" alt="Descrição da imagem 4">
-                        </div>
-                        <div class="slide__title">Título 4</div>
-                    </li>
-                    <!-- Adicione mais slides aqui -->
-                </ul>
-            </div>
-        </section>
-    </div>
+  <script>
+    // URLs das suas imagens/GIFs do Jumpshare
+    const imageUrls = [
+      'https://jumpshare.com/v/image1.jpg',
+      'https://jumpshare.com/v/image2.gif',
+      'https://jumpshare.com/v/image3.jpg',
+      'https://jumpshare.com/v/image4.gif'
+    ];
 
-    <!-- Importa o JavaScript da biblioteca Splide.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-
-    <!-- Inicializa o carrossel com as configurações -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            new Splide('.splide', {
-                type        : 'loop',
-                perPage     : 3,
-                focus       : 'center',
-                autoplay    : true,
-                interval    : 4000,
-                pauseOnHover: true,
-                /* MUDANÇA: Espaçamento mínimo */
-                gap         : '0.25rem', /* 4px */
-                /* MUDANÇA: Setas removidas para o layout ultra compacto */
-                arrows      : false,
-                pagination  : false,
-                drag        : true,
-            }).mount();
-        });
-    </script>
-
+    const track = document.getElementById('carouselTrack');
+    // Cria slides
+    imageUrls.forEach(src => {
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      const img = document.createElement('img');
+      img.src = src;
+      slide.appendChild(img);
+      track.appendChild(slide);
+    });
+    // Duplica para efeito infinito
+    imageUrls.forEach(src => {
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      const img = document.createElement('img');
+      img.src = src;
+      slide.appendChild(img);
+      track.appendChild(slide);
+    });
+  </script>
 </body>
 </html>
