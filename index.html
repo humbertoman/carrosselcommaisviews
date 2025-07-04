@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrossel para Notion</title>
+    <title>Carrossel Infinito para Notion</title>
 
+    <!-- 1. Importa o CSS da biblioteca do carrossel (Splide.js) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
 
     <style>
-        /* Estilos para garantir que o carrossel ocupe todo o espaço do embed */
+        /* Estilos para garantir que o carrossel ocupe 100% do bloco no Notion */
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #f0f0f0; /* Cor de fundo opcional */
+            font-family: 'Inter', sans-serif; /* Uma fonte limpa e moderna */
+            background-color: transparent; /* Fundo transparente para se mesclar ao Notion */
         }
 
-        .container {
+        .splide-container {
             width: 100%;
             height: 100%;
             display: flex;
@@ -25,68 +27,107 @@
             align-items: center;
         }
 
-        /* Estilos para as imagens dentro dos slides */
+        /* Estilo para as imagens dentro dos slides */
         .splide__slide img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 'cover' preenche o espaço, 'contain' mostra a imagem inteira */
+            object-fit: cover; /* Garante que a imagem preencha o slide sem distorcer */
             display: block;
+            border-radius: 8px; /* Bordas arredondadas para um visual mais suave */
         }
 
-        /* Ajuste opcional para a altura dos slides */
+        /* Define a proporção dos slides para que se ajustem à largura */
         .splide__slide {
-            height: 400px; /* Defina uma altura ou deixe automático */
-            background-color: #fff;
+            /* MUDANÇA PRINCIPAL: A propriedade 'aspect-ratio' faz com que a altura
+              se ajuste automaticamente em proporção à largura. Isso garante que o
+              carrossel inteiro redimensione de forma fluida.
+              Altere '16 / 9' para '4 / 3', '1 / 1' (quadrado), etc., conforme sua preferência.
+            */
+            aspect-ratio: 16 / 9;
+            max-height: 80vh; /* Limita a altura máxima em telas muito grandes */
+            background-color: #f0f2f5; /* Cor de fundo caso a imagem demore a carregar */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Garante que a imagem respeite as bordas arredondadas */
+        }
+        
+        /* Personalização das setas de navegação */
+        .splide__arrow {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .splide__arrow svg {
+            fill: white;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <section class="splide" aria-label="Galeria de Imagens">
+    <div class="splide-container">
+        <!-- 2. Estrutura HTML do Carrossel -->
+        <!-- O atributo 'aria-label' é importante para acessibilidade. -->
+        <section class="splide" aria-label="Galeria de imagens e GIFs">
             <div class="splide__track">
                 <ul class="splide__list">
+                    <!-- 
+                      INSTRUÇÃO: Substitua as URLs abaixo pelas suas URLs diretas do Jumpshare.
+                      Para obter a URL direta, no Jumpshare, clique em "Share" e procure por "Direct Link".
+                      Adicione quantos itens `<li>` (slides) você quiser.
+                    -->
                     <li class="splide__slide">
-                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_1" alt="Descrição da imagem 1">
+                        <img src="https://placehold.co/800x450/7F9CF5/FFFFFF?text=Imagem+1" alt="Descrição da imagem 1">
                     </li>
                     <li class="splide__slide">
-                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_2" alt="Descrição da imagem 2">
+                        <img src="https://placehold.co/800x450/A3BFFA/FFFFFF?text=Imagem+2" alt="Descrição da imagem 2">
                     </li>
                     <li class="splide__slide">
-                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_3" alt="Descrição da imagem 3">
+                        <img src="https://placehold.co/800x450/FBBF24/FFFFFF?text=Imagem+3" alt="Descrição da imagem 3">
                     </li>
                     <li class="splide__slide">
-                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_4" alt="Descrição da imagem 4">
+                        <img src="https://placehold.co/800x450/F87171/FFFFFF?text=Imagem+4" alt="Descrição da imagem 4">
                     </li>
                     <li class="splide__slide">
-                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_5" alt="Descrição da imagem 5">
+                        <img src="https://placehold.co/800x450/4ADE80/FFFFFF?text=Imagem+5" alt="Descrição da imagem 5">
+                    </li>
+                     <li class="splide__slide">
+                        <img src="https://placehold.co/800x450/34D399/FFFFFF?text=Imagem+6" alt="Descrição da imagem 6">
                     </li>
                 </ul>
             </div>
         </section>
     </div>
 
+    <!-- 3. Importa o JavaScript da biblioteca Splide.js -->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 
+    <!-- 4. Inicializa o carrossel com as configurações desejadas -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             new Splide('.splide', {
-                type       : 'loop', // 'loop' para infinito, 'slide' para padrão
-                perPage    : 3,      // Número de slides visíveis
-                autoplay   : true,   // Inicia automaticamente
-                interval   : 3000,   // Intervalo de tempo em milissegundos (3 segundos)
-                gap        : '1rem', // Espaço entre os slides
-                arrows     : true,   // Mostrar setas de navegação
-                pagination : false,  // Esconder os pontos de paginação
-                pauseOnHover: true,  // Pausa ao passar o mouse sobre o carrossel
-                // Configuração para responsividade
+                // Configurações principais
+                type       : 'loop',     // 'loop' para carrossel infinito.
+                perPage    : 3,          // 3 slides visíveis em telas grandes.
+                focus      : 'center',   // Centraliza o slide ativo (opcional, mas bom para 3 slides).
+                autoplay   : true,       // O carrossel se move sozinho.
+                interval   : 3500,       // Intervalo de 3.5 segundos entre os slides.
+                pauseOnHover: true,      // Pausa a animação ao passar o mouse.
+                
+                // UI e UX
+                gap        : '1rem',     // Espaçamento de 16px entre os slides.
+                arrows     : true,       // Mostra as setas de navegação.
+                pagination : false,      // Esconde os pontos de paginação.
+                drag       : true,       // Permite arrastar com o mouse ou dedo.
+                
+                // Responsividade: ajusta o número de slides conforme a largura da tela.
                 breakpoints: {
-                    1024: { // Em telas com menos de 1024px de largura
+                    1200: { // Para telas com largura menor que 1200px
                         perPage: 2,
                     },
-                    768: { // Em telas com menos de 768px de largura
+                    768: {  // Para telas com largura menor que 768px (tablets/celulares)
                         perPage: 1,
-                    },
+                        arrows: false, // Esconde as setas em telas muito pequenas
+                    }
                 }
             }).mount();
         });
