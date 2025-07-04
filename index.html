@@ -1,63 +1,96 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrossel Infinito de Cards</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Carrossel para Notion</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+
+    <style>
+        /* Estilos para garantir que o carrossel ocupe todo o espaço do embed */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0; /* Cor de fundo opcional */
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilos para as imagens dentro dos slides */
+        .splide__slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 'cover' preenche o espaço, 'contain' mostra a imagem inteira */
+            display: block;
+        }
+
+        /* Ajuste opcional para a altura dos slides */
+        .splide__slide {
+            height: 400px; /* Defina uma altura ou deixe automático */
+            background-color: #fff;
+        }
+    </style>
 </head>
 <body>
 
-<div class="carousel-container">
-    <div class="carousel-track">
-        <div class="carousel-card">
-            <img class="card-image" src="https://images.unsplash.com/photo-1588471980726-8346cb47721b?w=500&auto=format&fit=crop&q=60" alt="Vaso de cerâmica azul">
-            <div class="card-title">
-                Vaso de Cerâmica
+    <div class="container">
+        <section class="splide" aria-label="Galeria de Imagens">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    <li class="splide__slide">
+                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_1" alt="Descrição da imagem 1">
+                    </li>
+                    <li class="splide__slide">
+                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_2" alt="Descrição da imagem 2">
+                    </li>
+                    <li class="splide__slide">
+                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_3" alt="Descrição da imagem 3">
+                    </li>
+                    <li class="splide__slide">
+                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_4" alt="Descrição da imagem 4">
+                    </li>
+                    <li class="splide__slide">
+                        <img src="URL_DA_SUA_IMAGEM_OU_GIF_DO_JUMPSHARE_5" alt="Descrição da imagem 5">
+                    </li>
+                </ul>
             </div>
-        </div>
-
-        <div class="carousel-card">
-            <img class="card-image" src="https://images.unsplash.com/photo-1549492423-400259a5e5a4?w=500&auto=format&fit=crop&q=60" alt="Parede com textura azul">
-            <div class="card-title">
-                Textura Azul
-            </div>
-        </div>
-
-        <div class="carousel-card">
-            <img class="card-image" src="https://images.unsplash.com/photo-1557999246-316516a41e21?w=500&auto=format&fit=crop&q=60" alt="Formas geométricas azuis">
-            <div class="card-title">
-                Formas Geométricas
-            </div>
-        </div>
-        
-        <div class="carousel-card">
-            <img class="card-image" src="https://images.unsplash.com/photo-1596131367468-372e574d4b1a?w=500&auto=format&fit=crop&q=60" alt="Cadeira azul em fundo azul">
-            <div class="card-title">
-                Design Monocromático
-            </div>
-        </div>
-
-        <div class="carousel-card">
-            <img class="card-image" src="https://images.unsplash.com/photo-1513519245088-0e12f2e1f070?w=500&auto=format&fit=crop&q=60" alt="Porta azul">
-            <div class="card-title">
-                Porta Azul
-            </div>
-        </div>
-        
-        <div class="carousel-card">
-            <img class="card-image" src="https://images.unsplash.com/photo-1625805261010-3a479c7b489d?w=500&auto=format&fit=crop&q=60" alt="Piscina vista de cima">
-            <div class="card-title">
-                Vista da Piscina
-            </div>
-        </div>
-
+        </section>
     </div>
-    <button class="carousel-button prev">&#10094;</button>
-    <button class="carousel-button next">&#10095;</button>
-</div>
 
-<script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new Splide('.splide', {
+                type       : 'loop', // 'loop' para infinito, 'slide' para padrão
+                perPage    : 3,      // Número de slides visíveis
+                autoplay   : true,   // Inicia automaticamente
+                interval   : 3000,   // Intervalo de tempo em milissegundos (3 segundos)
+                gap        : '1rem', // Espaço entre os slides
+                arrows     : true,   // Mostrar setas de navegação
+                pagination : false,  // Esconder os pontos de paginação
+                pauseOnHover: true,  // Pausa ao passar o mouse sobre o carrossel
+                // Configuração para responsividade
+                breakpoints: {
+                    1024: { // Em telas com menos de 1024px de largura
+                        perPage: 2,
+                    },
+                    768: { // Em telas com menos de 768px de largura
+                        perPage: 1,
+                    },
+                }
+            }).mount();
+        });
+    </script>
 
 </body>
 </html>
