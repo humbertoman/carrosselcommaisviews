@@ -1,24 +1,27 @@
 /* Estilos Gerais */
 body, html {
+    /* ALTERAÇÃO: Removemos os estilos de centralização e definimos 100% de tamanho */
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #111; /* Fundo escuro para destacar o carrossel */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    background-color: transparent; /* Fundo transparente para melhor integração */
+    overflow: hidden; /* Evita barras de rolagem no bloco do Notion */
 }
 
 /* Contêiner principal que define a "janela" do carrossel */
 .carousel-container {
-    width: 90%;
-    max-width: 1000px;
+    /* ALTERAÇÃO: O contêiner agora é 100% fluido */
+    width: 100%;
+    height: 100%;
     position: relative;
-    overflow: hidden; /* Essencial: esconde os cards fora da área visível */
+    overflow: hidden;
+    display: flex; /* Adicionado para ajudar no alinhamento vertical */
+    align-items: center; /* Centraliza os cards verticalmente se houver espaço extra */
 }
 
-/* A "pista" onde os cards se movem. É muito mais larga que o contêiner. */
+/* A "pista" onde os cards se movem. */
 .carousel-track {
     display: flex;
     gap: 20px; /* Espaço entre os cards */
@@ -26,11 +29,11 @@ body, html {
 
 /* Estilo de cada card individual */
 .carousel-card {
-    /* Define que 3 cards devem caber na tela, ajustando pelo gap */
+    /* Esta regra é a chave para manter 3 cards visíveis. Ela já é fluida! */
     flex: 0 0 calc(100% / 3 - 14px); 
     background-color: white;
-    border-radius: 16px; /* Bordas arredondadas */
-    overflow: hidden; /* Garante que a imagem respeite as bordas */
+    border-radius: 16px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -39,9 +42,9 @@ body, html {
 .card-image {
     width: 100%;
     display: block;
-    /* Força o formato retangular vertical (altura é 4/3 da largura) */
+    /* Esta regra preserva o formato vertical da imagem durante o redimensionamento */
     aspect-ratio: 3 / 4; 
-    object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+    object-fit: cover;
 }
 
 .card-title {
@@ -52,7 +55,7 @@ body, html {
     background-color: white;
 }
 
-/* Botões de Navegação */
+/* Botões de Navegação (sem alterações) */
 .carousel-button {
     position: absolute;
     top: 50%;
@@ -84,7 +87,7 @@ body, html {
     right: 15px;
 }
 
-/* Responsividade para telas menores */
+/* Responsividade para telas menores (mantida) */
 @media (max-width: 768px) {
     .carousel-card {
         /* Mostra 2 cards em tablets */
