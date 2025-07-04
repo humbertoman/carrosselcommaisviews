@@ -36,16 +36,14 @@
 
         .splide-container {
             width: 100%;
-            /* MUDANÇA: Define uma largura máxima para forçar o carrossel a ser pequeno */
-            max-width: 450px; 
+            /* MUDANÇA: Largura máxima reduzida em 25% para um layout mais compacto */
+            max-width: 340px; 
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* MUDANÇA: Reduz o padding para economizar espaço */
             padding: 8px; 
             box-sizing: border-box;
-            /* MUDANÇA: Centraliza o container se o bloco do Notion for maior que a max-width */
             margin: 0 auto;
         }
 
@@ -76,7 +74,6 @@
         
         /* Estilo do título do card */
         .slide__title {
-            /* MUDANÇA: Reduz o padding e o tamanho da fonte para o layout compacto */
             padding: 8px 12px;
             text-align: center;
             font-weight: 500;
@@ -91,7 +88,6 @@
         /* Personalização das setas de navegação */
         .splide__arrow {
             background-color: rgba(0, 0, 0, 0.5);
-            /* MUDANÇA: Reduz o tamanho das setas */
             width: 2em;
             height: 2em;
         }
@@ -155,14 +151,11 @@
                 autoplay    : true,
                 interval    : 4000,
                 pauseOnHover: true,
-                /* MUDANÇA: Reduz o espaçamento para um layout mais compacto */
-                gap         : '0.75rem', /* 12px */
+                /* MUDANÇA: Espaçamento reduzido para o novo tamanho */
+                gap         : '0.5rem', /* 8px */
                 arrows      : true,
                 pagination  : false,
                 drag        : true,
-                /* MUDANÇA: Breakpoints removidos. O layout agora é fixo e pequeno, 
-                   controlado pela 'max-width' no CSS, garantindo que ele
-                   sempre se mantenha reduzido. */
             }).mount();
         });
     </script>
