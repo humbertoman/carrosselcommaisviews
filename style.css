@@ -1,68 +1,106 @@
-/* CSS Simplificado - Apenas Estilos, sem dimensionamento complexo */
+/* CSS da versão boa, com um pequeno ajuste para o redimensionamento */
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: transparent;
     overflow: hidden;
-    font-family: system-ui, sans-serif;
-    background: transparent;
 }
 
+/* Contêiner principal que define a "janela" do carrossel */
 .carousel-container {
     width: 100%;
     height: 100%;
     position: relative;
-    display: flex;
-    align-items: center;
     overflow: hidden;
+    
+    /* --- O PEQUENO AJUSTE ESTÁ AQUI --- */
+    /* Usar 'grid' pode criar um contexto de dimensionamento mais estável no Notion */
+    display: grid;
+    align-items: center;
 }
 
+/* A "pista" onde os cards se movem. */
 .carousel-track {
     display: flex;
-    height: 100%;
-    /* O gap será definido no JavaScript */
+    gap: 20px;
+    /* Adicionado para garantir que o track se alinhe corretamente no grid */
+    grid-area: 1 / 1; 
 }
 
+/* Estilo de cada card individual */
 .carousel-card {
-    height: 100%; /* O card ocupa a altura total do track */
+    /* Mantivemos a lógica original que estava funcionando melhor */
+    flex: 0 0 calc(100% / 3 - 14px); 
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    background-color: white;
-    border-radius: 12px;
-    overflow: hidden;
-    flex-shrink: 0; /* Impede que o card encolha */
-    /* A LARGURA SERÁ DEFINIDA PELO JAVASCRIPT */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .card-image {
     width: 100%;
-    flex-grow: 1; /* Faz a imagem ocupar o espaço restante */
+    display: block;
+    aspect-ratio: 3 / 4; 
     object-fit: cover;
-    min-height: 0; /* Correção para flexbox em alguns navegadores */
 }
 
 .card-title {
-    padding: 12px;
+    padding: 16px;
     text-align: center;
     font-weight: 600;
     color: #222;
     background-color: white;
 }
 
+/* Botões de Navegação */
 .carousel-button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.8);
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     z-index: 10;
 }
 
-.carousel-button.prev { left: 10px; }
-.carousel-button.next { right: 10px; }
+.carousel-button:hover {
+    background-color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-button.prev {
+    left: 15px;
+}
+
+.carousel-button.next {
+    right: 15px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .carousel-card {
+        flex: 0 0 calc(100% / 2 - 10px);
+    }
+}
+
+@media (max-width: 500px) {
+    .carousel-card {
+        flex: 0 0 80%;
+    }
+    .carousel-track {
+        padding-left: 10%;
+    }
+}
