@@ -1,0 +1,88 @@
+/* Estilo geral do corpo da página */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+/* Contêiner principal do carrossel */
+.carousel-container {
+    position: relative;
+    width: 80%;
+    max-width: 800px; /* Largura máxima */
+    margin: auto;
+    overflow: hidden; /* Esconde as partes das imagens que estão fora */
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Faixa que contém todas as imagens */
+.carousel-slide {
+    display: flex;
+    width: 100%;
+    transition: transform 0.5s ease-in-out; /* Animação de transição */
+}
+
+/* Estilo de cada imagem */
+.carousel-slide img {
+    width: 100%;
+    flex-shrink: 0; /* Impede que as imagens encolham */
+    object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+}
+
+/* Estilo dos botões de navegação (anterior/próximo) */
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 15px 10px;
+    font-size: 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.prev-btn:hover, .next-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+/* Contêiner para os indicadores de ponto */
+.dots-container {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+}
+
+/* Estilo de cada ponto indicador */
+.dot {
+    cursor: pointer;
+    height: 12px;
+    width: 12px;
+    margin: 0 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+/* Estilo do ponto ativo */
+.dot.active {
+    background-color: white;
+}
